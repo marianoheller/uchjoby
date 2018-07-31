@@ -34,6 +34,7 @@ const _CardSide = styled.div`
 `;
 
 const FrontSide = _CardSide.extend`
+  background-color: grey;
 `;
 
 const BackSide = _CardSide.extend`

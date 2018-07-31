@@ -3,6 +3,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
+import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
@@ -12,8 +13,8 @@ const store = configureStore({});
 
 const theme = {
   palette: {
-    primary: 'black',
-    secondary: 'black',
+    primary: '#DDDDDD',
+    secondary: 'white',
     danger: 'red',
     background: {
       primary: '#FFFFFF',
@@ -28,7 +29,9 @@ const theme = {
 render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
-      <App />
+      <Router>
+        <App />
+      </Router>
     </ThemeProvider>
   </Provider>,
   document.getElementById('root'),

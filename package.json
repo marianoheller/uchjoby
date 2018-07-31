@@ -6,6 +6,7 @@
     "node": "8.7.0"
   },
   "scripts": {
+    "install:full": "npm install && cd client && npm install",
     "start": "node ./bin/www",
     "start:dev": "cross-env DEBUG=uchjoby:* env=development npm start",
     "test": "mocha --recursive ./test"
@@ -29,6 +30,7 @@
     "passport-google-oauth2": "^0.1.6",
     "passport-local": "^1.0.0",
     "pug": "2.0.0-beta11",
+    "redux-observable": "^1.0.0",
     "serve-favicon": "~2.4.5",
     "translate": "^1.0.2",
     "wiktionary": "^1.2.0"

@@ -4,7 +4,9 @@ const wiktionary = require('wiktionary');
 const cheerioTableparser = require('cheerio-tableparser');
 const debug = require('debug')('uchjoby:wiktionary');
 
-// const REPEATER_URL = 'http://unique-shoe.glitch.me/';
+/**
+ * URLS NEEDED FOR TABLE REQUEST
+ */
 const REPEATER_URL = 'http://0.0.0.0:8080/';
 const BASE_URL = 'https://en.wiktionary.org/wiki/';
 
@@ -17,13 +19,46 @@ const word = {
   parse: res => {
     if (!res || !res.html) return null;
     debug('parsing response');
-    const $ = cheerio.load(res.html);
+    const $ = cheerio.load(`<body>${res.html}</body>`);
     const ret = {};
-    ret.pronunciation = $('#Pronunciation').parent().next().children().first().text();
-    ret.pronunciation = ret.pronunciation.replace('(key)', '');
-    // res.meaning = $('#Verb').parent().next();
-    debug("RET", ret)
-    return res.html;
+
+    // Separte russian section
+    const rusInit = $('body').children().index($('h2 > #Russian').parent());
+    const rusLen = $('body').children().slice(rusInit).index(
+      // +1 to skip first h2
+      $('body').children().slice(rusInit + 1).find('h2 > span').first().parent()
+    );
+    const rusSection = $('body').children().slice(rusInit, rusLen === -1 ? undefined : rusInit + rusLen);
+
+    // Get Pronunciation
+    try {
+      ret.pronunciation = rusSection.find('#Pronunciation').parent().next().children().first().text().replace(/\n/g, '').replace('(key)', '');
+    } catch(err) {
+      console.log('pronunciation field error');
+      debug(err.message || err);
+    }
+
+    // Get main
+    try {
+      ret.main = rusSection.filter('p').first().text().replace(/\n/g, '');
+    } catch(err) {
+      console.log('main field error');
+      debug(err.message || err);
+    }
+
+    // Get extra
+    try {
+      // TODO: remove('dl') isn't working for some reason
+      ret.extra = rusSection.remove('dl').filter('ol').first().children().map(function (i, e) {
+        return $(this).text();
+      }).get().map(s => s.replace(/\n/g, ''));
+      // debug(rusSection.remove('dl').filter('ol').first().children())
+    } catch(err) {
+      console.log('extra field error');
+      debug(err.message || err);
+    }
+    debug('returning', ret);
+    return ret;
   },
 }
 

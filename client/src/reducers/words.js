@@ -1,27 +1,31 @@
-import * as socketActions from '../actions/word';
+import * as wordsActions from '../actions/words';
+
+const MAX_LEN = 20;
 
 const initState = {
-  data: null,
+  data: [],
   isFetching: false,
   errors: null,
 };
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case socketActions.GET_WORD.REQUEST:
+    case wordsActions.GET_WORD.REQUEST:
       return {
         ...state,
         isFetching: true,
         errors: null,
       };
-    case socketActions.GET_WORD.SUCCESS:
+    case wordsActions.GET_WORD.SUCCESS:
+      const newData = [...state.data, ...action.data];
+      const len = newData.length;
       return {
         ...state,
-        data: action.data,
+        data: len > MAX_LEN ? newData.slice(len - MAX_LEN, len - 1) : newData,
         isFetching: false,
         errors: null,
       };
-    case socketActions.GET_WORD.FAILURE:
+    case wordsActions.GET_WORD.FAILURE:
       return {
         ...state,
         isFetching: false,

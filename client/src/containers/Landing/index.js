@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Flashcard from '../../components/Flashcard';
 
-import * as wordActions from '../../actions/word';
+import * as wordsActions from '../../actions/words';
 
 const LandingContainer = styled.div`
   width: 100%;
@@ -39,15 +39,15 @@ class Landing extends Component {
 }
 
 
-const mapStateToProps = ({ word }) => ({
-  errors: word.errors,
-  isFetching: word.isFetching,
-  data: word.data,
+const mapStateToProps = ({ words }) => ({
+  errors: words.errors,
+  isFetching: words.isFetching,
+  data: words.data,
 });
 
 
 const mapDispatchToProps = dispatch => ({
-  getWord: () => dispatch(wordActions.getWord.request()),
+  getWord: () => dispatch(wordsActions.getWords.request(1)),
 });
 
 

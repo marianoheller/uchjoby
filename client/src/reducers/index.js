@@ -1,8 +1,8 @@
 import { combineReducers } from 'redux';
-import word from './word';
+import words from './words';
 
 const appReducer = combineReducers({
-  word,
+  words,
 });
 
 

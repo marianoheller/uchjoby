@@ -1,7 +1,7 @@
 import { combineEpics } from 'redux-observable';
 
-import word from './word';
+import words from './words';
 
 export default combineEpics(
-  word,
+  words,
 );

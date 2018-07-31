@@ -6,8 +6,8 @@ import { createRequestTypes, createAction } from '../utils';
  */
 export const GET_WORD = createRequestTypes('GET_WORD');
 
-export const getWord = {
-  request: () => createAction(GET_WORD.REQUEST),
-  success: data => createAction(GET_WORD.SUCCESS, data),
+export const getWords = {
+  request: qty => createAction(GET_WORD.REQUEST, { qty }),
+  success: arrWords => createAction(GET_WORD.SUCCESS, { arrWords }),
   failure: errors => createAction(GET_WORD.FAILURE, { errors }),
 };

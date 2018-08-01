@@ -10,13 +10,13 @@ const initState = {
 
 export default (state = initState, action) => {
   switch (action.type) {
-    case wordsActions.GET_WORD.REQUEST:
+    case wordsActions.GET_WORDS.REQUEST:
       return {
         ...state,
         isFetching: true,
         errors: null,
       };
-    case wordsActions.GET_WORD.SUCCESS:
+    case wordsActions.GET_WORDS.SUCCESS:
       const newData = [...state.data, ...action.data];
       const len = newData.length;
       return {
@@ -25,7 +25,7 @@ export default (state = initState, action) => {
         isFetching: false,
         errors: null,
       };
-    case wordsActions.GET_WORD.FAILURE:
+    case wordsActions.GET_WORDS.FAILURE:
       return {
         ...state,
         isFetching: false,

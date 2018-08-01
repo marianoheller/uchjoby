@@ -1,16 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import styled from 'styled-components';
+import React from 'react';
 
 import * as SC from './StyledComponents';
-
-const LandingContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
 
 
 const Landing = () => (

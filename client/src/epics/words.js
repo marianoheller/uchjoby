@@ -31,7 +31,7 @@ const getWordsRequestEpic = (action$, state$) => action$
 
 const getWordsFailureEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.FAILURE)
-  .delay(2000)
+  .delay(100000)
   .mergeMap(() => Observable.of(wordsActions.getWords.request(1)));
 
 

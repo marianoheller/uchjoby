@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 
 
 const CardContainer = styled.div`
-  width: 300px;
-  height: 300px;
-  perspective: 600px;
+  width: 100%;
+  height: 100%;
+  perspective: 100vw;
   font-weight: 400;
 `;
 
@@ -41,30 +41,26 @@ const BackSide = _CardSide.extend`
   transform: rotateY( 180deg );
 `;
 
-const Meaning = styled.div``
-const Pronunciation = styled.div``
+const Info = styled.div``
+const Translation = styled.div``
 
 
 export default class Flashcard extends Component {
   static propTypes = {
     style: PropTypes.instanceOf(Object),
     data: PropTypes.shape({
-      front: PropTypes.string,
-      back: PropTypes.shape({
-        pronunciation: PropTypes.string,
-        meaning: PropTypes.string,
-      }),
+      word: PropTypes.string,
+      translation: PropTypes.string,
+      info: PropTypes.shape({}),
     }),
   }
 
   static defaultProps = {
     style: {},
     data: {
-      front: '',
-      back: {
-        pronunciation: '',
-        meaning: '',
-      },
+      word: '',
+      translation: '',
+      info: null,
     },
   }
 
@@ -90,8 +86,8 @@ export default class Flashcard extends Component {
             {data.front}
           </FrontSide>
           <BackSide>
-            <Pronunciation>{data.back.pronunciation}</Pronunciation>
-            <Meaning>{data.back.meaning}</Meaning>
+            <Translation>{data.translation}</Translation>
+            <Info>{data.info}</Info>
           </BackSide>
         </Card>
       </CardContainer>

@@ -5,6 +5,9 @@ import * as translationsActions from '../actions/translations';
 import { MAX_WORDS_BUFF } from '../config';
 
 const initState = {
+  /**
+   * [ { word, translation, info } ]
+   */
   arrData: [],
   wordsStatus: {
     isFetching: false,
@@ -63,11 +66,15 @@ export default (state = initState, action) => {
         }
       };
     case translationsActions.GET_TRANSLATIONS.SUCCESS:
-      const newData = state.arrData.map(d => )
-      // [...state.arrData, ...action.words.map(word => ({ word }))];
+      const trasArrData = [...state.arrData];
+      action.words.forEach((w, i) => {
+        const tIndex = state.arrData.findIndex(e => e.word === w);
+        if (tIndex === -1) return;
+        trasArrData[tIndex].translation = action.translations[i];
+      });
       return {
         ...state,
-        arrData: newData,
+        arrData: trasArrData,
         translationsStatus: {
           isFetching: false,
           errors: null,
@@ -93,10 +100,15 @@ export default (state = initState, action) => {
         }
       };
     case infosActions.GET_INFOS.SUCCESS:
-      const newData = [...state.arrData, ...action.words.map(word => ({ word }))];
+      const infosData = [...state.arrData];
+      action.words.forEach((w, i) => {
+        const tIndex = state.arrData.findIndex(e => e.word === w);
+        if (tIndex === -1) return;
+        infosData[tIndex].info = action.infos[i];
+      });
       return {
         ...state,
-        arrData: newData,
+        arrData: infosData,
         infosStatus: {
           isFetching: false,
           errors: null,

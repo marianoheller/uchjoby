@@ -14,6 +14,31 @@ const PracticeContainer = styled.div`
   align-items: center;
 `;
 
+const FlashcardContainer = styled.div`
+  width: 80%;
+  height: 80%;
+  max-width: 600px;
+  margin-top: 2rem;
+`;
+
+const Button = styled.div`
+  color: ${({ theme }) => theme.palette.primary };
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  width: 5rem;
+  height: 1.5rem;
+  margin-top: 1rem;
+  border-width: 1px;
+  border-style: solid;
+  border-color: black;
+
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+`;
+
 class Practice extends Component {
   componentDidMount() {
     const { getWord } = this.props;
@@ -22,17 +47,18 @@ class Practice extends Component {
 
   render() {
     const data = {
-      front: '',
-      back: {
-        pronunciation: '',
-        meaning: '',
-      },
+      word: '',
+      translation: '',
+      info: null,
     }
     return (
       <PracticeContainer>
-        <Flashcard
-          data={data}
-        />
+        <FlashcardContainer>
+          <Flashcard
+            data={data}
+          />          
+        </FlashcardContainer>
+        <Button>Next</Button>
       </PracticeContainer>
     )
   }

@@ -12,26 +12,33 @@ const PracticeContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow: hidden;
 `;
 
 const FlashcardContainer = styled.div`
-  width: 80%;
-  height: 80%;
   max-width: 600px;
-  margin-top: 2rem;
+  width: 90%;
+  height: 90%;
+  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  margin-right:  0.5rem;
 `;
 
 const Button = styled.div`
   color: ${({ theme }) => theme.palette.primary };
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   cursor: pointer;
   user-select: none;
-  width: 5rem;
-  height: 1.5rem;
+  height: 2rem;
+  width: 2rem;
   margin-top: 1rem;
   border-width: 1px;
   border-style: solid;
   border-color: black;
+  border-radius: 50%;
 
   &:hover {
     background-color: black;
@@ -58,7 +65,9 @@ class Practice extends Component {
             data={data}
           />          
         </FlashcardContainer>
-        <Button>Next</Button>
+        <Button>
+          >
+        </Button>
       </PracticeContainer>
     )
   }

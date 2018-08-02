@@ -18,8 +18,12 @@ const theme = {
     danger: 'red',
     background: {
       primary: '#FFFFFF',
-      secondary: '#c9ceeb',
+      secondary: '#F0F0F0',
     },
+    button: {
+      normal: '#3ccfcf',
+      selected: '#ffcd1f',
+    }
   },
   zIndex: {
     appBar: 100,

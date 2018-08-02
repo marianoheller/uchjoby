@@ -1,6 +1,6 @@
 import * as wordsActions from '../actions/words';
 
-const MAX_LEN = 20;
+import { MAX_WORDS_BUFF } from '../config';
 
 const initState = {
   data: [],
@@ -21,7 +21,7 @@ export default (state = initState, action) => {
       const len = newData.length;
       return {
         ...state,
-        data: len > MAX_LEN ? newData.slice(len - MAX_LEN, len - 1) : newData,
+        data: len > MAX_WORDS_BUFF ? newData.slice(len - MAX_WORDS_BUFF, len - 1) : newData,
         isFetching: false,
         errors: null,
       };

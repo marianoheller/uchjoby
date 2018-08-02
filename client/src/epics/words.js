@@ -2,12 +2,12 @@ import { combineEpics } from 'redux-observable';
 import { Observable } from 'rxjs';
 import axios from 'axios';
 
-
 import * as wordsActions from '../actions/words';
+import { MAX_WORDS_BUFF } from '../config';
 
 
 
-const getWords = (action$, store) => action$
+const getWordsRequestEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.REQUEST)
   .switchMap(action => (
     Observable.from(
@@ -17,28 +17,33 @@ const getWords = (action$, store) => action$
         }
       })
     )
-    .catch(err => Observable.throw(err))
-  )
-  .mergeMap(response =>
-    // Concat so they fire sequentially
-    Observable.concat(
-      wordsActions.getWords.success(response.data),
-      Observable.of({ type: 'NOTIFY_SUCCESS', payload: response.data })
-    )
-  )
-  .catch(err => (
-    Observable.concat(
-      Observable.of(wordsActions.getWords.failure(err.message)),
-      Observable.timer(5000)
-      .switchMap(() => (
-        Observable.of(wordsActions.getWords.request(1))
-      ))
-    )
-  ))
-  .takeUntil(action$.ofType('ABORT_FETCH_WORDS'))
-);
+    .switchMap(response => wordsActions.getWords.success(response.data) )
+    .catch(err => Observable.of(wordsActions.getWords.failure(err.message)) )
+  ));
+
+const getWordsFailureEpic = action$ => action$
+  .ofType(wordsActions.GET_WORDS.REQUEST)
+  .delay(100000)
+  .switchMap((args) => Observable.of(wordsActions.getWords.request(1)))
+  
 
 
 export default combineEpics(
-  getWords,
+  getWordsRequestEpic,
+  getWordsFailureEpic,
 );
+
+
+/**
+ * 
+ * .catch(err => (
+    Observable.concat(
+      Observable.of(wordsActions.getWords.failure(err.message)),
+      // Wait and retry if buffer not full
+      Observable.timer(1000)
+      .withLatestFrom(state$)
+      .filter(([, state]) => state.words.data.length < MAX_WORDS_BUFF)
+      .switchMap((args) => Observable.of(wordsActions.getWords.request(1)))
+    )
+    // .takeUntil(action$.ofType('ABORT_FETCH_WORDS'))
+ */

@@ -21,7 +21,8 @@ const getTranslationsRequestEpic = (action$, state$) => action$
     .mergeMap(response => (
       Observable.concat(
         Observable.of(translationsActions.getTranslations.success(action.words, response.data)),
-        Observable.of(infosActions.getInfos.request(response.data))
+        Observable.timer(250)
+        .switchMap(() => Observable.of(infosActions.getInfos.request(response.data)))
       )
     ))
     .catch(err => Observable.of(translationsActions.getTranslations.failure({

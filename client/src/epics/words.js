@@ -21,18 +21,23 @@ const getWordsRequestEpic = (action$, state$) => action$
     .mergeMap(response => (
       Observable.concat(
         Observable.of(wordsActions.getWords.success(response.data)),
-        Observable.of(translationsActions.getTranslations.request(response.data))
+        Observable.timer(250)
+        .switchMap(() => Observable.of(translationsActions.getTranslations.request(response.data)))
       )
     ))
-    .catch(err => Observable.of(wordsActions.getWords.failure(err.message)))
-  ))
-  
+    .catch(err => Observable.of(wordsActions.getWords.failure({
+      message: err.message,
+      qty: action.qty,
+    })))
+  ));
 
 
 const getWordsFailureEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.FAILURE)
-  .delay(100000)
-  .mergeMap(() => Observable.of(wordsActions.getWords.request(1)));
+  .scan(x => (x === 10 ? 10 : x + 1), 1) // counts to 10 and then repeats 10
+  .delayWhen(x => Observable.timer(1000 * x))
+  .withLatestFrom(action$)
+  .mergeMap(([, action]) => Observable.of(wordsActions.getWords.request(action.error.qty)));
 
 
 export default combineEpics(

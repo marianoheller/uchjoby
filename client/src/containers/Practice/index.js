@@ -53,16 +53,22 @@ class Practice extends Component {
   }
 
   render() {
-    const data = {
-      word: '',
-      translation: '',
-      info: null,
-    }
+    const {
+      data,
+      wordsStatus,
+      translationsStatus,
+      infosStatus,
+    } = this.props;
     return (
       <PracticeContainer>
         <FlashcardContainer>
           <Flashcard
             data={data}
+            status={{
+              word: wordsStatus,
+              translation: translationsStatus,
+              info: infosStatus,
+            }}
           />          
         </FlashcardContainer>
         <Button>
@@ -75,9 +81,10 @@ class Practice extends Component {
 
 
 const mapStateToProps = ({ words }) => ({
-  errors: words.errors,
-  isFetching: words.isFetching,
-  data: words.data,
+  data: words.arrData[words.currentIndex],
+  wordsStatus: words.wordsStatus,
+  translationsStatus: words.translationsStatus,
+  infosStatus: words.infosStatus,
 });
 
 

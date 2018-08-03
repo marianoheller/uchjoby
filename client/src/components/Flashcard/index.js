@@ -34,7 +34,7 @@ const _CardSide = styled.div`
 `;
 
 const FrontSide = _CardSide.extend`
-  background-color: grey;
+  /* background-color: grey; */
 `;
 
 const BackSide = _CardSide.extend`
@@ -48,10 +48,28 @@ const Translation = styled.div``
 export default class Flashcard extends Component {
   static propTypes = {
     style: PropTypes.instanceOf(Object),
+    status: PropTypes.shape({
+      word: PropTypes.shape({
+        error: PropTypes.string,
+        isFetching: PropTypes.bool,
+      }),
+      translation: PropTypes.shape({
+        error: PropTypes.string,
+        isFetching: PropTypes.bool,
+      }),
+      info: PropTypes.shape({
+        error: PropTypes.string,
+        isFetching: PropTypes.bool,
+      }),
+    }),
     data: PropTypes.shape({
       word: PropTypes.string,
       translation: PropTypes.string,
-      info: PropTypes.shape({}),
+      info: PropTypes.shape({
+        pronunciation: PropTypes.string,
+        main: PropTypes.string,
+        extra: PropTypes.arrayOf(PropTypes.string),
+      }),
     }),
   }
 
@@ -83,7 +101,7 @@ export default class Flashcard extends Component {
       <CardContainer style={style}>
         <Card onClick={this.flipCard} isFlipped={isFlipped}>
           <FrontSide>
-            {data.front}
+            {data.word}
           </FrontSide>
           <BackSide>
             <Translation>{data.translation}</Translation>

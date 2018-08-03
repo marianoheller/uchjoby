@@ -4,10 +4,8 @@ const debug = require('debug')('uchjoby:randomWord');
 
 const PATH_DICTS = 'dictionaries';
 
-const getRandomWord = ({ type, amount }) => {
-  if (!amount) {
-    amount = 1;
-  }
+const getRandomWord = ({ type, qty }) => {
+  if (!qty) qty = 1;
   return new Promise((resolve, reject) => {
     try {
       var files = fs.readdirSync(PATH_DICTS).filter(f => f.endsWith('.json'));
@@ -32,7 +30,7 @@ const getRandomWord = ({ type, amount }) => {
         return reject('Error reading file');
       }
       const objArr = JSON.parse(data);
-      resolve(Array(amount).fill(0).map(() => (
+      resolve(Array(qty).fill(0).map(() => (
         objArr[Math.floor(Math.random() * objArr.length)]
       )));
     });

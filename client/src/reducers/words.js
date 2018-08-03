@@ -9,6 +9,7 @@ const initState = {
    * [ { word, translation, info } ]
    */
   arrData: [],
+  currentIndex: null,
   wordsStatus: {
     isFetching: false,
     error: null,
@@ -37,10 +38,10 @@ export default (state = initState, action) => {
         }
       };
     case wordsActions.GET_WORDS.SUCCESS:
-      const newData = [...state.arrData, ...action.words.map(word => ({ word }))];
+      const wordsData = [...state.arrData, ...action.words.map(w => ({ word: w }))];
       return {
         ...state,
-        arrData: newData,
+        arrData: wordsData,
         wordsStatus: {
           isFetching: false,
           errors: null,
@@ -66,15 +67,18 @@ export default (state = initState, action) => {
         }
       };
     case translationsActions.GET_TRANSLATIONS.SUCCESS:
-      const trasArrData = [...state.arrData];
+      const transArrData = [...state.arrData];
       action.words.forEach((w, i) => {
         const tIndex = state.arrData.findIndex(e => e.word === w);
         if (tIndex === -1) return;
-        trasArrData[tIndex].translation = action.translations[i];
+        transArrData[tIndex] = {
+          ...transArrData[tIndex],
+          translation: action.translations[i],
+        };
       });
       return {
         ...state,
-        arrData: trasArrData,
+        arrData: transArrData,
         translationsStatus: {
           isFetching: false,
           errors: null,
@@ -101,10 +105,13 @@ export default (state = initState, action) => {
       };
     case infosActions.GET_INFOS.SUCCESS:
       const infosData = [...state.arrData];
-      action.words.forEach((w, i) => {
+      action.infos.forEach((w, i) => {
         const tIndex = state.arrData.findIndex(e => e.word === w);
         if (tIndex === -1) return;
-        infosData[tIndex].info = action.infos[i];
+        infosData[tIndex].info = {
+          ...infosData[tIndex].info,
+          info: action.infos[i],
+        }
       });
       return {
         ...state,

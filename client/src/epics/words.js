@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import * as wordsActions from '../actions/words';
 import * as translationsActions from '../actions/translations';
-import { MAX_WORDS_BUFF } from '../config';
 
 
 

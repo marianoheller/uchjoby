@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
+import ReactLoading from 'react-loading';
 
 
 const CardContainer = styled.div`
@@ -22,14 +23,17 @@ const Card = styled.div`
 
 const _CardSide = styled.div`
   position: absolute;
+  font-size: 1.5rem;
   height: 100%;
   width: 100%;
   backface-visibility: hidden;
+  color: black;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  text-align: center;
   background: ${({ theme }) => theme.palette.background.primary};
 `;
 
@@ -41,13 +45,32 @@ const BackSide = _CardSide.extend`
   transform: rotateY( 180deg );
 `;
 
-const Info = styled.div``
-const Translation = styled.div``
+const Info = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+`;
 
+const Translation = styled.div``;
+
+const Main = styled.div`
+  margin-top: 0.5rem;
+`;
+
+const Pronunciation = styled.div`
+  margin-top: 0.5rem;
+`;
+
+const Extra = styled.ul`
+  text-align: left;
+`;
+
+const Loader = styled.div`
+  position: absolute;
+  top: 0.25rem;
+`;
 
 export default class Flashcard extends Component {
   static propTypes = {
-    style: PropTypes.instanceOf(Object),
     status: PropTypes.shape({
       word: PropTypes.shape({
         error: PropTypes.string,
@@ -62,7 +85,7 @@ export default class Flashcard extends Component {
         isFetching: PropTypes.bool,
       }),
     }),
-    data: PropTypes.shape({
+    wordData: PropTypes.shape({
       word: PropTypes.string,
       translation: PropTypes.string,
       info: PropTypes.shape({
@@ -74,8 +97,7 @@ export default class Flashcard extends Component {
   }
 
   static defaultProps = {
-    style: {},
-    data: {
+    wordData: {
       word: '',
       translation: '',
       info: null,
@@ -90,22 +112,39 @@ export default class Flashcard extends Component {
     this.flipCard = this.flipCard.bind(this);
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.wordData.word !== this.props.wordData.word) {
+      this.setState({ isFlipped: false });
+    }
+  }
+
   flipCard() {
     this.setState({ isFlipped: !this.state.isFlipped });
   }
 
   render() {
-    const { style, data } = this.props;
+    const { wordData, status, ...rest } = this.props;
     const { isFlipped } = this.state;
     return (
-      <CardContainer style={style}>
+      <CardContainer {...rest}>
         <Card onClick={this.flipCard} isFlipped={isFlipped}>
           <FrontSide>
-            {data.word}
+            { (status.word.isFetching || status.word.error) &&
+              <Loader>
+                <ReactLoading type={'bubbles'} color={'red'} height={'50px'} width={'50px'} />
+              </Loader>
+            }
+            {wordData.word}
           </FrontSide>
           <BackSide>
-            <Translation>{data.translation}</Translation>
-            <Info>{data.info}</Info>
+            <Translation>{wordData.translation}</Translation>
+            { wordData.info &&
+              <Info>
+                <Main>{wordData.info.main}</Main>
+                <Pronunciation>{wordData.info.pronunciation}</Pronunciation>
+                <Extra>{wordData.info.extra.map((e, i) => <li key={`${e}${i}`}>{e}</li>)}</Extra>
+              </Info>
+            }
           </BackSide>
         </Card>
       </CardContainer>

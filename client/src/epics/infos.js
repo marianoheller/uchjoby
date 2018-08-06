@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import axios from 'axios';
 
 import * as infosActions from '../actions/infos';
+import * as wordsActions from '../actions/words';
 import { MAX_WORDS_BUFF } from '../config';
 
 
@@ -17,7 +18,14 @@ const getInfosRequestEpic = (action$, state$) => action$
         }
       })
     )
-    .mergeMap(response => Observable.of(infosActions.getInfos.success(response.data)))
+    .mergeMap(response => Observable.concat(
+      Observable.of(infosActions.getInfos.success(action.words, response.data)),
+      Observable.timer(250)
+      .withLatestFrom(state$)
+      .map(([, state]) => Math.ceil((MAX_WORDS_BUFF - state.words.arrData.length) / 2))
+      .filter(delta => delta > 0)
+      .switchMap(delta => Observable.of(wordsActions.getWords.request(delta)))
+    ))
     .catch(err => Observable.of(infosActions.getInfos.failure({
       message: err.message,
       words: action.words,

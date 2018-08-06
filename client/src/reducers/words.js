@@ -9,7 +9,7 @@ const initState = {
    * [ { word, translation, info } ]
    */
   arrData: [],
-  currentIndex: null,
+  currentIndex: 0,
   wordsStatus: {
     isFetching: false,
     error: null,
@@ -25,7 +25,18 @@ const initState = {
 };
 
 export default (state = initState, action) => {
+  const { currentIndex } = state;
   switch (action.type) {
+    case wordsActions.NEXT_WORD_INDEX:
+      return {
+        ...state,
+        currentIndex: currentIndex < (MAX_WORDS_BUFF - 1) ? currentIndex + 1 : currentIndex,
+      };
+    case wordsActions.PREVIOUS_WORD_INDEX:
+      return {
+        ...state,
+        currentIndex: currentIndex > 0 ? currentIndex - 1 : currentIndex,
+      };
     /** *****************************************************************************
      * WORDS
      */
@@ -34,17 +45,17 @@ export default (state = initState, action) => {
         ...state,
         wordsStatus: {
           isFetching: true,
-          errors: null,
+          // error: null,
         }
       };
     case wordsActions.GET_WORDS.SUCCESS:
-      const wordsData = [...state.arrData, ...action.words.map(w => ({ word: w }))];
+      const wordsData = [...state.arrData, ...action.words.map(w => ({ word: w }))].slice(-1 * MAX_WORDS_BUFF);
       return {
         ...state,
         arrData: wordsData,
         wordsStatus: {
           isFetching: false,
-          errors: null,
+          error: null,
         }
       };
     case wordsActions.GET_WORDS.FAILURE:
@@ -52,7 +63,7 @@ export default (state = initState, action) => {
         ...state,
         wordsStatus: {
           isFetching: false,
-          errors: action.error.message,
+          error: action.error.message,
         }
       };
     /** *****************************************************************************
@@ -63,7 +74,7 @@ export default (state = initState, action) => {
         ...state,
         translationsStatus: {
           isFetching: true,
-          errors: null,
+          error: null,
         }
       };
     case translationsActions.GET_TRANSLATIONS.SUCCESS:
@@ -81,7 +92,7 @@ export default (state = initState, action) => {
         arrData: transArrData,
         translationsStatus: {
           isFetching: false,
-          errors: null,
+          error: null,
         }
       };
     case translationsActions.GET_TRANSLATIONS.FAILURE:
@@ -89,7 +100,7 @@ export default (state = initState, action) => {
         ...state,
         translationsStatus: {
           isFetching: false,
-          errors: action.error.message,
+          error: action.error.message,
         }
       };
     /** *****************************************************************************
@@ -100,16 +111,16 @@ export default (state = initState, action) => {
         ...state,
         infosStatus: {
           isFetching: true,
-          errors: null,
+          error: null,
         }
       };
     case infosActions.GET_INFOS.SUCCESS:
       const infosData = [...state.arrData];
-      action.infos.forEach((w, i) => {
-        const tIndex = state.arrData.findIndex(e => e.word === w);
+      action.words.forEach((w, i) => {
+        const tIndex = infosData.findIndex(e => e.translation === w);
         if (tIndex === -1) return;
-        infosData[tIndex].info = {
-          ...infosData[tIndex].info,
+        infosData[tIndex] = {
+          ...infosData[tIndex],
           info: action.infos[i],
         }
       });
@@ -118,7 +129,7 @@ export default (state = initState, action) => {
         arrData: infosData,
         infosStatus: {
           isFetching: false,
-          errors: null,
+          error: null,
         }
       };
     case infosActions.GET_INFOS.FAILURE:
@@ -126,7 +137,7 @@ export default (state = initState, action) => {
         ...state,
         infosStatus: {
           isFetching: false,
-          errors: action.error.message,
+          error: action.error.message,
         }
       };
     default:

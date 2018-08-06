@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import Flashcard from '../../components/Flashcard';
-
 import * as wordsActions from '../../actions/words';
 
 const PracticeContainer = styled.div`
@@ -24,17 +23,25 @@ const FlashcardContainer = styled.div`
   margin-right:  0.5rem;
 `;
 
+const Buttonera = styled.div`
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1rem;
+`;
+
 const Button = styled.div`
   color: ${({ theme }) => theme.palette.primary };
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  cursor: pointer;
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   user-select: none;
   height: 2rem;
   width: 2rem;
-  margin-top: 1rem;
   border-width: 1px;
   border-style: solid;
   border-color: black;
@@ -55,15 +62,18 @@ class Practice extends Component {
   render() {
     const {
       data,
+      currentIndex,
       wordsStatus,
       translationsStatus,
       infosStatus,
+      nextCard,
+      previousCard,
     } = this.props;
     return (
       <PracticeContainer>
         <FlashcardContainer>
           <Flashcard
-            data={data}
+            wordData={data[currentIndex]}
             status={{
               word: wordsStatus,
               translation: translationsStatus,
@@ -71,9 +81,20 @@ class Practice extends Component {
             }}
           />          
         </FlashcardContainer>
-        <Button>
+        <Buttonera>
+          <Button
+            onClick={previousCard}
+            disabled={data.length === 0 || currentIndex === 0}
           >
-        </Button>
+            {"<"}
+          </Button>
+          <Button
+            onClick={nextCard}
+            disabled={data.length === 0 || currentIndex === (data.length - 1)}
+          >
+            {">"}
+          </Button>
+        </Buttonera>
       </PracticeContainer>
     )
   }
@@ -81,7 +102,8 @@ class Practice extends Component {
 
 
 const mapStateToProps = ({ words }) => ({
-  data: words.arrData[words.currentIndex],
+  currentIndex: words.currentIndex,
+  data: words.arrData,
   wordsStatus: words.wordsStatus,
   translationsStatus: words.translationsStatus,
   infosStatus: words.infosStatus,
@@ -90,6 +112,8 @@ const mapStateToProps = ({ words }) => ({
 
 const mapDispatchToProps = dispatch => ({
   getWord: () => dispatch(wordsActions.getWords.request(1)),
+  nextCard: () => dispatch(wordsActions.nextWordIndex()),
+  previousCard: () => dispatch(wordsActions.previousWordIndex()),
 });
 
 

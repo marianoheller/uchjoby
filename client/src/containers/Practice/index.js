@@ -17,7 +17,7 @@ const PracticeContainer = styled.div`
 const FlashcardContainer = styled.div`
   max-width: 600px;
   width: 90%;
-  height: 90%;
+  height: 88%;
   margin-top: 0.5rem;
   margin-left: 0.5rem;
   margin-right:  0.5rem;
@@ -29,7 +29,7 @@ const Buttonera = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 100%;
-  padding: 0 1rem;
+  overflow: hidden;
 `;
 
 const Button = styled.div`
@@ -40,16 +40,18 @@ const Button = styled.div`
   text-align: center;
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   user-select: none;
-  height: 2rem;
-  width: 2rem;
-  border-width: 1px;
-  border-style: solid;
-  border-color: black;
+
+  height: 3rem;
+  width: 3rem;
+  font-size: 2rem;
   border-radius: 50%;
+  margin: 0 1rem;
+  background-color: ${({ theme }) => theme.palette.button.normal};
+  color: white;
 
   &:hover {
-    background-color: black;
-    color: white;
+    background-color: ${({ theme }) => theme.palette.button.selected};
+    color: #444;
   }
 `;
 

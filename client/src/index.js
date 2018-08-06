@@ -13,16 +13,16 @@ const store = configureStore({});
 
 const theme = {
   palette: {
-    primary: '#DDDDDD',
-    secondary: 'white',
+    primary: 'white',
+    secondary: '#DDDDDD',
     danger: 'red',
     background: {
-      primary: '#FFFFFF',
+      primary: '#4257B2',
       secondary: '#F0F0F0',
     },
     button: {
-      normal: '#3ccfcf',
-      selected: '#ffcd1f',
+      normal: '#3CCFCF', //teal like
+      selected: '#FFCD1F', //yellow
     }
   },
   zIndex: {

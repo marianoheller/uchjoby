@@ -35,8 +35,12 @@ const getWordsFailureEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.FAILURE)
   .scan(x => (x === 10 ? 10 : x + 1), 1) // counts to 10 and then repeats 10
   .delayWhen(x => Observable.timer(1000 * x))
-  .withLatestFrom(action$)
-  .mergeMap(([, action]) => Observable.of(wordsActions.getWords.request(action.error.qty)));
+  // THIS GETS THE LAST ACTION AND BREAKS GETTING A DIFF ACTION
+  // .withLatestFrom(action$)
+  .mergeMap(() => {
+    console.log("ACTION", action$);
+    return Observable.of(wordsActions.getWords.request(action$.error.qty));
+  });
 
 
 /* 

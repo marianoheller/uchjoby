@@ -2,19 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
-import backgroundImg from '../../assets/sea-dark.jpeg';
-
 
 export const LandingWrapper = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-image: url(${backgroundImg});
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center bottom; 
-  background-size: cover;
+  background-color: ${({ theme }) => theme.palette.background.primary};
 `;
 
 export const Title = styled.div`
@@ -45,13 +39,9 @@ export const ButtonsContainer = styled.div`
   align-items: center;
   margin-top: 30vh;
 
-  & > div:last-child  {
-    background-color: ${props => props.theme.primary};
+  & > div {
+    background-color: ${({ theme }) => theme.palette.button.normal};  
   }
-  & > div:first-child  {
-    text-decoration: underline;
-  }
-
 
   /* Mobile */
   @media (max-width: 768px) {

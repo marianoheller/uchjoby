@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
 
@@ -34,7 +34,7 @@ const _CardSide = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: ${({ theme }) => theme.palette.background.primary};
+  background: white;
 `;
 
 const FrontSide = _CardSide.extend`
@@ -64,12 +64,23 @@ const Extra = styled.ul`
   text-align: left;
 `;
 
-const Loader = styled.div`
+const LoaderContainer = styled.div`
   position: absolute;
   top: 0.25rem;
 `;
 
-export default class Flashcard extends Component {
+const Loader = ({ theme, ...rest}) => (
+  <ReactLoading
+    type={'bubbles'}
+    color={theme.palette.background.primary}
+    height={'50px'}
+    width={'50px'}
+    {...rest}
+  />
+);
+
+
+class Flashcard extends Component {
   static propTypes = {
     status: PropTypes.shape({
       word: PropTypes.shape({
@@ -123,20 +134,34 @@ export default class Flashcard extends Component {
   }
 
   render() {
-    const { wordData, status, ...rest } = this.props;
+    const { wordData, status, theme, ...rest } = this.props;
     const { isFlipped } = this.state;
+
+    const isFrontSideLoader = status.word.isFetching || status.word.error;
+    const isBackSideLoader = status.word.isFetching || 
+      status.word.error ||
+      status.translation.isFetching || 
+      status.translation.error
+      status.info.isFetching || 
+      status.info.error;
+
     return (
       <CardContainer {...rest}>
         <Card onClick={this.flipCard} isFlipped={isFlipped}>
           <FrontSide>
-            { (status.word.isFetching || status.word.error) &&
-              <Loader>
-                <ReactLoading type={'bubbles'} color={'red'} height={'50px'} width={'50px'} />
-              </Loader>
+            { isFrontSideLoader &&
+              <LoaderContainer>
+                <Loader theme={theme}/>
+              </LoaderContainer>
             }
             {wordData.word}
           </FrontSide>
           <BackSide>
+            { isBackSideLoader &&
+              <LoaderContainer>
+                <Loader theme={theme}/>
+              </LoaderContainer>
+            }
             <Translation>{wordData.translation}</Translation>
             { wordData.info &&
               <Info>
@@ -151,3 +176,6 @@ export default class Flashcard extends Component {
     )
   }
 }
+
+
+export default withTheme(Flashcard);

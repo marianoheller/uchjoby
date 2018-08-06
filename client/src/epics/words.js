@@ -39,6 +39,30 @@ const getWordsFailureEpic = (action$, state$) => action$
   .mergeMap(([, action]) => Observable.of(wordsActions.getWords.request(action.error.qty)));
 
 
+/* 
+const getWordsRetriggerEpic = (action$, state$) => action$
+.ofType(wordsActions.NEXT_WORD_INDEX)
+.mergeMap(action => (
+  Observable.from(
+    axios.get('/api/word/random', {
+      params: {
+        qty: action.qty,
+      }
+    })
+  )
+  .mergeMap(response => (
+    Observable.concat(
+      Observable.of(wordsActions.getWords.success(response.data)),
+      Observable.timer(250)
+      .switchMap(() => Observable.of(translationsActions.getTranslations.request(response.data)))
+    )
+  ))
+  .catch(err => Observable.of(wordsActions.getWords.failure({
+    message: err.message,
+    qty: action.qty,
+  })))
+));
+ */
 export default combineEpics(
   getWordsRequestEpic,
   getWordsFailureEpic,

@@ -9,7 +9,8 @@
     "install:full": "npm install && cd client && npm install",
     "start": "node ./bin/www",
     "start:dev": "cross-env DEBUG=uchjoby:* env=development nodemon ./bin/www",
-    "test": "mocha --recursive ./test"
+    "test": "mocha --recursive ./test",
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "dependencies": {
     "axios": "^0.18.0",

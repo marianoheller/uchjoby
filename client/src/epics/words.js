@@ -29,16 +29,17 @@ const getWordsRequestEpic = (action$, state$) => action$
       qty: action.qty,
     })))
   ));
-
+  
+  
 
 const getWordsFailureEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.FAILURE)
-  .scan(x => (x === 10 ? 10 : x + 1), 1) // counts to 10 and then repeats 10
-  .delayWhen(x => Observable.timer(1000 * x))
-  // THIS GETS THE LAST ACTION AND BREAKS GETTING A DIFF ACTION
-  // .withLatestFrom(action$)
-  .mergeMap(action => Observable.of(wordsActions.getWords.request(action.error.qty)));
-
+  .scan((acc, curr) => ({
+    delay: (acc.delay === 10 ? 10 : acc.delay + 1),
+    action: curr,
+  }), { delay: 0 }) // counts from 1 to 10 and then repeats 10
+  .delayWhen(obj => Observable.timer(1000 * obj.delay))
+  .mergeMap(obj => Observable.of(wordsActions.getWords.request(obj.action.error.qty)));
 
 /* 
 const getWordsRetriggerEpic = (action$, state$) => action$

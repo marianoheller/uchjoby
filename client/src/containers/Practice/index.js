@@ -16,6 +16,9 @@ const PracticeContainer = styled.div`
 `;
 
 const FlashcardContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  
   max-width: 600px;
   width: 90%;
   height: calc(100% - 3rem - 1.5rem); /* 100% - navbar - margins */
@@ -35,10 +38,10 @@ const Buttonera = styled.div`
   overflow: hidden;
 
   position: absolute;
-  bottom: 50%;
+  top: 50%;
   left: 0;
   right: 0;
-  transform: translate(0, 50%);
+  transform: translate(0, -50%);
 
   @media only screen and (max-width: 768px) {
     position: inherit;
@@ -112,9 +115,9 @@ class Practice extends React.Component {
         <FlashcardContainer>
           <Transition
             keys={rangeWords.map((e, i) => i - 1)}
-            from={{ opacity: 0, x: 100 }}
+            from={{ opacity: 0, x: 300 }}
             enter={{ opacity: 1, x: 0 }}
-            leave={{ opacity: 0, x: -100 }}
+            leave={{ opacity: 0, x: -300 }}
             native
           >
             {rangeWords.map(wordData => ({ opacity, x }) =>
@@ -123,7 +126,7 @@ class Practice extends React.Component {
                   height: '100%',
                   width: '100%',
                   opacity: opacity.interpolate(o => o),
-                  transform: x.interpolate(pos => `translate3d(${pos},0,0)`),
+                  transform: x.interpolate(pos => `translate3d(${pos}px,0px,0px)`),
                 }}
               >
                 <Flashcard

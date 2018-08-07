@@ -20,7 +20,17 @@ const AppContainer = styled.div`
 class App extends Component {
   componentDidMount() {
     const { getWord } = this.props;
+    document.addEventListener("keydown", this._handleKeyDown.bind(this));
     getWord();
+  }
+
+  _handleKeyDown(e) {
+    if (e.keyCode === 39 ) { // Arrow right
+      this.props.nextCard();
+    }
+    if (e.keyCode === 37 ) { // Arrow left
+      this.props.previousCard();
+    }
   }
 
   render() {
@@ -50,6 +60,8 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
   getWord: () => dispatch(wordsActions.getWords.request(1)),
+  nextCard: () => dispatch(wordsActions.nextWordIndex()),
+  previousCard: () => dispatch(wordsActions.previousWordIndex()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

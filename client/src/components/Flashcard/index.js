@@ -138,11 +138,11 @@ class Flashcard extends Component {
     const { isFlipped } = this.state;
 
     const isFrontSideLoader = status.word.isFetching || status.word.error;
-    const isBackSideLoader = status.word.isFetching || 
+    const isBackSideLoader = status.word.isFetching ||
       status.word.error ||
-      status.translation.isFetching || 
-      status.translation.error
-      status.info.isFetching || 
+      status.translation.isFetching ||
+      status.translation.error ||
+      status.info.isFetching ||
       status.info.error;
 
     return (

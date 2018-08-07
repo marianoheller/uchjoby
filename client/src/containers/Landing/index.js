@@ -15,4 +15,5 @@ const Landing = () => (
   </SC.LandingWrapper>
 );
 
+
 export default Landing;

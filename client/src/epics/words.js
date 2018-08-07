@@ -8,7 +8,6 @@ import * as translationsActions from '../actions/translations';
 import { MAX_WORDS_BUFF } from '../config';
 
 
-
 const getWordsRequestEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.REQUEST)
   .mergeMap(action => (
@@ -32,7 +31,6 @@ const getWordsRequestEpic = (action$, state$) => action$
     })))
   ));
   
-  
 
 const getWordsFailureEpic = (action$, state$) => action$
   .ofType(wordsActions.GET_WORDS.FAILURE)
@@ -44,9 +42,9 @@ const getWordsFailureEpic = (action$, state$) => action$
   .mergeMap(obj => Observable.of(wordsActions.getWords.request(obj.action.error.qty)));
 
 
-
 const getWordsRetriggerEpic = (action$, state$) => action$
   .ofType(wordsActions.NEXT_WORD_INDEX)
+  .bufferCount(MAX_WORDS_BUFF / 3) //Buffer some so it doesn't trigger all the time
   .filter(action => {
     const len = state$.value.words.arrData.length;
     const index = state$.value.words.currentIndex;
@@ -61,4 +59,3 @@ export default combineEpics(
   getWordsFailureEpic,
   getWordsRetriggerEpic,
 );
-

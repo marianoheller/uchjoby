@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 
@@ -56,57 +56,49 @@ const Button = styled.div`
   }
 `;
 
-class Practice extends Component {
-  componentDidMount() {
-    const { getWord } = this.props;
-    getWord();
-  }
-
-  render() {
-    const {
-      data,
-      currentIndex,
-      wordsStatus,
-      translationsStatus,
-      infosStatus,
-      nextCard,
-      previousCard,
-    } = this.props;
-    return (
-      <PracticeContainer>
-        <FlashcardContainer>
-          <Flashcard
-            wordData={data[currentIndex]}
-            status={{
-              word: wordsStatus,
-              translation: translationsStatus,
-              info: infosStatus,
-            }}
-          />          
-        </FlashcardContainer>
-        <Buttonera>
-          <Button
-            onClick={e => {
-              if (data.length === 0 || currentIndex === 0) return () => {};
-              return previousCard(e);
-            }}
-            disabled={data.length === 0 || currentIndex === 0}
-          >
-            {"<"}
-          </Button>
-          <Button
-            onClick={e => {
-              if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
-              return nextCard(e);
-            }}
-            disabled={data.length === 0 || currentIndex === (data.length - 1)}
-          >
-            {">"}
-          </Button>
-        </Buttonera>
-      </PracticeContainer>
-    )
-  }
+const Practice = ({
+  data,
+  currentIndex,
+  wordsStatus,
+  translationsStatus,
+  infosStatus,
+  nextCard,
+  previousCard,
+}) => {
+  return (
+    <PracticeContainer>
+      <FlashcardContainer>
+        <Flashcard
+          wordData={data[currentIndex]}
+          status={{
+            word: wordsStatus,
+            translation: translationsStatus,
+            info: infosStatus,
+          }}
+        />          
+      </FlashcardContainer>
+      <Buttonera>
+        <Button
+          onClick={e => {
+            if (data.length === 0 || currentIndex === 0) return () => {};
+            return previousCard(e);
+          }}
+          disabled={data.length === 0 || currentIndex === 0}
+        >
+          {"<"}
+        </Button>
+        <Button
+          onClick={e => {
+            if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
+            return nextCard(e);
+          }}
+          disabled={data.length === 0 || currentIndex === (data.length - 1)}
+        >
+          {">"}
+        </Button>
+      </Buttonera>
+    </PracticeContainer>
+  )
 }
 
 
@@ -120,7 +112,6 @@ const mapStateToProps = ({ words }) => ({
 
 
 const mapDispatchToProps = dispatch => ({
-  getWord: () => dispatch(wordsActions.getWords.request(1)),
   nextCard: () => dispatch(wordsActions.nextWordIndex()),
   previousCard: () => dispatch(wordsActions.previousWordIndex()),
 });

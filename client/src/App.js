@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Route, Switch, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom'
 
 import Landing from './containers/Landing';
 import Practice from './containers/Practice';
-
 import Navbar from './components/Navbar';
+import * as wordsActions from './actions/words';
 
 const AppContainer = styled.div`
   width: 100%;
@@ -16,6 +17,11 @@ const AppContainer = styled.div`
 `;
 
 class App extends Component {
+  componentDidMount() {
+    const { getWord } = this.props;
+    getWord();
+  }
+
   render() {
     return (
       <AppContainer>
@@ -38,4 +44,12 @@ class App extends Component {
   }
 }
 
-export default App;
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = dispatch => ({
+  getWord: () => dispatch(wordsActions.getWords.request(1)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+

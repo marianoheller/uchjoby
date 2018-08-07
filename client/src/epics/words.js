@@ -37,10 +37,7 @@ const getWordsFailureEpic = (action$, state$) => action$
   .delayWhen(x => Observable.timer(1000 * x))
   // THIS GETS THE LAST ACTION AND BREAKS GETTING A DIFF ACTION
   // .withLatestFrom(action$)
-  .mergeMap(() => {
-    console.log("ACTION", action$);
-    return Observable.of(wordsActions.getWords.request(action$.error.qty));
-  });
+  .mergeMap(action => Observable.of(wordsActions.getWords.request(action.error.qty)));
 
 
 /* 

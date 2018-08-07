@@ -17,14 +17,11 @@ const PracticeContainer = styled.div`
 const FlashcardContainer = styled.div`
   max-width: 600px;
   width: 90%;
-  height: 88%;
-  margin-top: 0.5rem;
-  margin-left: 0.5rem;
-  margin-right:  0.5rem;
+  height: calc(100% - 4rem - 1.5rem);
+  margin: 0.5rem 0.5rem 1rem 0.5rem;
 `;
 
 const Buttonera = styled.div`
-  margin-top: 1rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -38,18 +35,22 @@ const Button = styled.div`
   justify-content: center;
   align-items: center;
   text-align: center;
-  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   user-select: none;
 
   height: 3rem;
   width: 3rem;
   font-size: 2rem;
+  font-weight: bold;
   border-radius: 50%;
-  margin: 0 1rem;
+  margin: 0 0.75rem;
   background-color: ${({ theme }) => theme.palette.button.normal};
   color: white;
 
-  &:hover {
+  opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
+  filter: ${({ disabled }) => (disabled ? 'brightness(90%)' : 'brightness(100%)')};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+
+  &:hover:enabled {
     background-color: ${({ theme }) => theme.palette.button.selected};
     color: #444;
   }
@@ -85,13 +86,19 @@ class Practice extends Component {
         </FlashcardContainer>
         <Buttonera>
           <Button
-            onClick={previousCard}
+            onClick={e => {
+              if (data.length === 0 || currentIndex === 0) return () => {};
+              return previousCard(e);
+            }}
             disabled={data.length === 0 || currentIndex === 0}
           >
             {"<"}
           </Button>
           <Button
-            onClick={nextCard}
+            onClick={e => {
+              if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
+              return nextCard(e);
+            }}
             disabled={data.length === 0 || currentIndex === (data.length - 1)}
           >
             {">"}

@@ -7,7 +7,6 @@ import * as wordsActions from '../actions/words';
 import { MAX_WORDS_BUFF } from '../config';
 
 
-
 const getInfosRequestEpic = (action$, state$) => action$
   .ofType(infosActions.GET_INFOS.REQUEST)
   .mergeMap(action => (
@@ -36,7 +35,7 @@ const getInfosRequestEpic = (action$, state$) => action$
 
 const getInfosFailureEpic = (action$, state$) => action$
   .ofType(infosActions.GET_INFOS.FAILURE)
-  .delay(100000)
+  .delay(3000)
   .mergeMap(action => Observable.of(infosActions.getInfos.request(action.error.words)));
 
 

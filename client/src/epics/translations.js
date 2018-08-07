@@ -4,7 +4,6 @@ import axios from 'axios';
 
 import * as translationsActions from '../actions/translations';
 import * as infosActions from '../actions/infos';
-import { MAX_WORDS_BUFF } from '../config';
 
 
 
@@ -35,7 +34,7 @@ const getTranslationsRequestEpic = (action$, state$) => action$
 
 const getTranslationsFailueEpic = (action$, state$) => action$
   .ofType(translationsActions.GET_TRANSLATIONS.FAILURE)
-  .delay(100000)
+  .delay(3000)
   .mergeMap(action => Observable.of(translationsActions.getTranslations.request(action.error.words)));
 
 

@@ -49,7 +49,7 @@ export default (state = initState, action) => {
         }
       };
     case wordsActions.GET_WORDS.SUCCESS:
-      const wordsData = [...state.arrData, ...action.words.map(w => ({ word: w }))].slice(-1 * MAX_WORDS_BUFF);
+      const wordsData = [...state.arrData, ...action.words.map(w => ({ word: w }))]; // .slice(-1 * MAX_WORDS_BUFF);
       return {
         ...state,
         arrData: wordsData,

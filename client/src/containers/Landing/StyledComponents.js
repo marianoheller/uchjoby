@@ -52,8 +52,8 @@ export const ButtonsContainer = styled.div`
     left: 0;
     right: 0;
     background-color: ${props => props.theme.primary};
-    & > div:first-child  {
-      text-decoration: none;
+    & > div {
+      flex: 1;
     }
   }
 `;

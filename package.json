@@ -8,7 +8,7 @@
   "scripts": {
     "install:full": "npm install && cd client && npm install",
     "start": "node ./bin/www",
-    "start:dev": "cross-env DEBUG=uchjoby:* env=development nodemon ./bin/www",
+    "start:dev": "cross-env DEBUG=uchjoby:* env=development nodemon ./bin/www  --ignore 'client'",
     "test": "mocha --recursive ./test",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },

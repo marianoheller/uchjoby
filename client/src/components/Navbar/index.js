@@ -9,14 +9,25 @@ const NavbarContainer = styled.div`
   background-color: ${({ theme }) => theme.palette.background.primary};
 `;
 
-const LeftGroup = styled.div``;
+const LeftGroup = styled.div`
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
 
 const RightGroup = styled.div``;
+
+const Brand = styled.div`
+  font-size: 1.5rem;
+`;
 
 const StyledLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
+  color: white;
 
   height: 3rem;
   text-decoration: none;
@@ -28,7 +39,7 @@ class Navbar extends Component {
       <NavbarContainer>
         <LeftGroup>
           <StyledLink to="/">
-            Home
+            <Brand>Uchjoby</Brand>
           </StyledLink>
         </LeftGroup>
 

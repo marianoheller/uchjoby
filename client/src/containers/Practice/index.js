@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
+import { Transition, animated } from 'react-spring'
 
 import Flashcard from '../../components/Flashcard';
 import * as wordsActions from '../../actions/words';
@@ -17,8 +18,13 @@ const PracticeContainer = styled.div`
 const FlashcardContainer = styled.div`
   max-width: 600px;
   width: 90%;
-  height: calc(100% - 4rem - 1.5rem);
+  height: calc(100% - 3rem - 1.5rem); /* 100% - navbar - margins */
   margin: 0.5rem 0.5rem 1rem 0.5rem;
+  z-index: ${({ theme }) => theme.zIndex.flashcard};
+
+  @media only screen and (max-width: 768px) {
+    height: calc(100% - 3rem - 4rem - 1.5rem); /* 100% - navbar - buttons - margins */
+  }
 `;
 
 const Buttonera = styled.div`
@@ -27,6 +33,20 @@ const Buttonera = styled.div`
   justify-content: space-between;
   width: 100%;
   overflow: hidden;
+
+  position: absolute;
+  bottom: 50%;
+  left: 0;
+  right: 0;
+  transform: translate(0, 50%);
+
+  @media only screen and (max-width: 768px) {
+    position: inherit;
+    bottom: unset;
+    left: unset;
+    right: unset;
+    transform: translate(0, 0);
+  }
 `;
 
 const Button = styled.div`
@@ -56,49 +76,91 @@ const Button = styled.div`
   }
 `;
 
-const Practice = ({
-  data,
-  currentIndex,
-  wordsStatus,
-  translationsStatus,
-  infosStatus,
-  nextCard,
-  previousCard,
-}) => {
-  return (
-    <PracticeContainer>
-      <FlashcardContainer>
-        <Flashcard
-          wordData={data[currentIndex]}
-          status={{
-            word: wordsStatus,
-            translation: translationsStatus,
-            info: infosStatus,
-          }}
-        />          
-      </FlashcardContainer>
-      <Buttonera>
-        <Button
-          onClick={e => {
-            if (data.length === 0 || currentIndex === 0) return () => {};
-            return previousCard(e);
-          }}
-          disabled={data.length === 0 || currentIndex === 0}
-        >
-          {"<"}
-        </Button>
-        <Button
-          onClick={e => {
-            if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
-            return nextCard(e);
-          }}
-          disabled={data.length === 0 || currentIndex === (data.length - 1)}
-        >
-          {">"}
-        </Button>
-      </Buttonera>
-    </PracticeContainer>
-  )
+class Practice extends React.Component {
+  constructor(props) {
+    super();
+    this.state = {
+      prevIndex: props.currentIndex,
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if ( prevProps.currentIndex !== this.props.currentIndex ) {
+      this.setState({
+        prevIndex: prevProps.currentIndex,
+      })
+    }
+  }
+
+  render() {
+    const {
+      data,
+      currentIndex,
+      wordsStatus,
+      translationsStatus,
+      infosStatus,
+      nextCard,
+      previousCard,
+    } = this.props;
+    const { prevIndex } = this.state;
+    const rangeWords = data.slice(
+      currentIndex > 0 ? currentIndex - 1 : 0,
+      currentIndex + 2
+    );
+    return (
+      <PracticeContainer>
+        <FlashcardContainer>
+          <Transition
+            keys={rangeWords.map((e, i) => i - 1)}
+            from={{ opacity: 0, x: 100 }}
+            enter={{ opacity: 1, x: 0 }}
+            leave={{ opacity: 0, x: -100 }}
+            native
+          >
+            {rangeWords.map(wordData => ({ opacity, x }) =>
+              <animated.div
+                style={{
+                  height: '100%',
+                  width: '100%',
+                  opacity: opacity.interpolate(o => o),
+                  transform: x.interpolate(pos => `translate3d(${pos},0,0)`),
+                }}
+              >
+                <Flashcard
+                  wordData={wordData}
+                  status={{
+                    word: wordsStatus,
+                    translation: translationsStatus,
+                    info: infosStatus,
+                  }}
+                />          
+              </animated.div>
+            )}
+          </Transition>
+        </FlashcardContainer>
+        <Buttonera>
+          <Button
+            onClick={e => {
+              if (data.length === 0 || currentIndex === 0) return () => {};
+              return previousCard(e);
+            }}
+            disabled={data.length === 0 || currentIndex === 0}
+          >
+            {"<"}
+          </Button>
+          <Button
+            onClick={e => {
+              if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
+              return nextCard(e);
+            }}
+            disabled={data.length === 0 || currentIndex === (data.length - 1)}
+          >
+            {">"}
+          </Button>
+        </Buttonera>
+      </PracticeContainer>
+    )
+  }
 }
 
 

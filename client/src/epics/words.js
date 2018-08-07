@@ -44,14 +44,14 @@ const getWordsFailureEpic = (action$, state$) => action$
 
 const getWordsRetriggerEpic = (action$, state$) => action$
   .ofType(wordsActions.NEXT_WORD_INDEX)
-  .bufferCount(MAX_WORDS_BUFF / 3) //Buffer some so it doesn't trigger all the time
+  .bufferCount(Math.floor(MAX_WORDS_BUFF / 4)) //Buffer some so it doesn't trigger all the time
   .filter(action => {
     const len = state$.value.words.arrData.length;
     const index = state$.value.words.currentIndex;
     const tolerance = MAX_WORDS_BUFF / 2;
-    return (len - index) < tolerance;
+    return (len - index) <= tolerance;
   })
-  .switchMap(() => Observable.of(translationsActions.getTranslations.request(MAX_WORDS_BUFF / 2)));
+  .switchMap(() => Observable.of(wordsActions.getWords.request(MAX_WORDS_BUFF / 2)));
 
 
 export default combineEpics(

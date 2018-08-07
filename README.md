@@ -4,8 +4,8 @@ Learn Russian using flashcards
 
 
 ### TODO
-Fix loading icon
-Style stuff
-NAVBAR
+* opacity on enter (with flip no pip)
+* arrow key for next card
+* animation on next card
 
 

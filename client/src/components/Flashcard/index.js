@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import styled, { withTheme } from 'styled-components';
 import PropTypes from 'prop-types';
 import ReactLoading from 'react-loading';
+import { Spring } from 'react-spring';
 
 
 const CardContainer = styled.div`
@@ -27,7 +28,7 @@ const _CardSide = styled.div`
   height: 100%;
   width: 100%;
   backface-visibility: hidden;
-  color: black;
+  color: #333;
 
   display: flex;
   flex-direction: column;
@@ -61,7 +62,10 @@ const Pronunciation = styled.div`
 `;
 
 const Extra = styled.ul`
+  margin-top: 1rem;
   text-align: left;
+  justify-content: center;
+  list-style-position: inside;
 `;
 
 const LoaderContainer = styled.div`
@@ -154,7 +158,14 @@ class Flashcard extends Component {
                 <Loader theme={theme}/>
               </LoaderContainer>
             }
-            {wordData.word}
+            <Spring
+              from={{ opacity: 0 }}
+              to={{ opacity: isFlipped ? 0 : 1 }}
+            >
+                {styles => 
+                  <div style={styles}>{wordData.word}</div>
+                }
+            </Spring>
           </FrontSide>
           <BackSide>
             { isBackSideLoader &&
@@ -162,14 +173,23 @@ class Flashcard extends Component {
                 <Loader theme={theme}/>
               </LoaderContainer>
             }
-            <Translation>{wordData.translation}</Translation>
-            { wordData.info &&
-              <Info>
-                <Main>{wordData.info.main}</Main>
-                <Pronunciation>{wordData.info.pronunciation}</Pronunciation>
-                <Extra>{wordData.info.extra.map((e, i) => <li key={`${e}${i}`}>{e}</li>)}</Extra>
-              </Info>
-            }
+            <Spring
+              from={{ opacity: 0 }}
+              to={{ opacity: isFlipped ? 1 : 0 }}
+            >
+                {styles => 
+                  <div style={styles}>
+                    <Translation>{wordData.translation}</Translation>
+                      { wordData.info &&
+                        <Info>
+                          <Main>{wordData.info.main}</Main>
+                          <Pronunciation>{wordData.info.pronunciation}</Pronunciation>
+                          <Extra>{wordData.info.extra.map((e, i) => <li key={`${e}${i}`}>{e}</li>)}</Extra>
+                        </Info>
+                      }
+                  </div>
+                }
+            </Spring>
           </BackSide>
         </Card>
       </CardContainer>

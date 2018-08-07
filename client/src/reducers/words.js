@@ -30,7 +30,7 @@ export default (state = initState, action) => {
     case wordsActions.NEXT_WORD_INDEX:
       return {
         ...state,
-        currentIndex: currentIndex < (MAX_WORDS_BUFF - 1) ? currentIndex + 1 : currentIndex,
+        currentIndex: currentIndex + 1,
       };
     case wordsActions.PREVIOUS_WORD_INDEX:
       return {

@@ -11,6 +11,7 @@ import * as wordsActions from './actions/words';
 const AppContainer = styled.div`
   width: 100%;
   height: 100%;
+  overflow: hidden;
   font-family: hurme_no2-webfont, -apple-system, BlinkMacSystemFont, sans-serif;
   color: ${({ theme }) => theme.palette.background.secondary};
   background-color: ${({ theme }) => theme.palette.background.secondary};

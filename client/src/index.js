@@ -26,7 +26,7 @@ const theme = {
     }
   },
   zIndex: {
-    appBar: 100,
+    flashcard: 100,
   },
 };
 

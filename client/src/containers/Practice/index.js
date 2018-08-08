@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Transition, animated } from 'react-spring'
+import { Parallax, ParallaxLayer } from 'react-spring'
 
 import Flashcard from '../../components/Flashcard';
 import * as wordsActions from '../../actions/words';
@@ -13,6 +13,25 @@ const PracticeContainer = styled.div`
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+`;
+
+const ParallaxContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  /* FIX PARALLAX */
+  & > div {
+    position: relative !important;
+  }
+  & > div > div {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
 `;
 
 const FlashcardContainer = styled.div`
@@ -85,6 +104,8 @@ class Practice extends React.Component {
     this.state = {
       prevIndex: props.currentIndex,
     }
+    this.handleNextCard = this.handleNextCard.bind(this);
+    this.handlePreviousCard = this.handlePreviousCard.bind(this);
   }
 
   componentDidUpdate(prevProps) {
@@ -95,6 +116,22 @@ class Practice extends React.Component {
     }
   }
 
+  handleNextCard(currentIndex) {
+    const { nextCard, data } = this.props;
+    if (currentIndex < data.length - 1 ) {
+      this.refs.parallax.scrollTo(currentIndex + 1);
+      nextCard();
+    }
+  }
+
+  handlePreviousCard(currentIndex) {
+    const { previousCard } = this.props;
+    if (currentIndex > 0 ) {
+      this.refs.parallax.scrollTo(currentIndex - 1);
+      previousCard();
+    }
+  }
+
   render() {
     const {
       data,
@@ -102,8 +139,6 @@ class Practice extends React.Component {
       wordsStatus,
       translationsStatus,
       infosStatus,
-      nextCard,
-      previousCard,
     } = this.props;
     const { prevIndex } = this.state;
     const rangeWords = data.slice(
@@ -112,40 +147,46 @@ class Practice extends React.Component {
     );
     return (
       <PracticeContainer>
-        <FlashcardContainer>
-          <Transition
-            keys={rangeWords.map((e, i) => i - 1)}
-            from={{ opacity: 0, x: 300 }}
-            enter={{ opacity: 1, x: 0 }}
-            leave={{ opacity: 0, x: -300 }}
-            native
+        <ParallaxContainer>
+          <Parallax
+             ref="parallax"
+             pages={data.length}
+             horizontal
+             scrolling={false}
           >
-            {rangeWords.map(wordData => ({ opacity, x }) =>
-              <animated.div
-                style={{
-                  height: '100%',
-                  width: '100%',
-                  opacity: opacity.interpolate(o => o),
-                  transform: x.interpolate(pos => `translate3d(${pos}px,0px,0px)`),
-                }}
-              >
-                <Flashcard
-                  wordData={wordData}
-                  status={{
-                    word: wordsStatus,
-                    translation: translationsStatus,
-                    info: infosStatus,
-                  }}
-                />          
-              </animated.div>
-            )}
-          </Transition>
-        </FlashcardContainer>
+            {data.map((wordData, i) => {
+              if ( i === currentIndex - 1 ||
+                i === currentIndex ||
+                i === currentIndex + 1
+              ) {
+                return (
+                  <ParallaxLayer
+                    offset={i}
+                    speed={0.1}
+                    key={`${i}`}
+                  >
+                    <FlashcardContainer>
+                      <Flashcard
+                        wordData={wordData}
+                        status={{
+                          word: wordsStatus,
+                          translation: translationsStatus,
+                          info: infosStatus,
+                        }}
+                      />
+                    </FlashcardContainer>
+                  </ParallaxLayer>
+                );
+              }
+              return <ParallaxLayer offset={i} speed={0.2} key={`${i}`}><div></div></ParallaxLayer>;
+            })}
+          </Parallax>
+        </ParallaxContainer>
         <Buttonera>
           <Button
             onClick={e => {
               if (data.length === 0 || currentIndex === 0) return () => {};
-              return previousCard(e);
+              return this.handlePreviousCard(currentIndex);
             }}
             disabled={data.length === 0 || currentIndex === 0}
           >
@@ -154,7 +195,7 @@ class Practice extends React.Component {
           <Button
             onClick={e => {
               if (data.length === 0 || currentIndex === (data.length - 1)) return () => {};
-              return nextCard(e);
+              return this.handleNextCard(currentIndex);
             }}
             disabled={data.length === 0 || currentIndex === (data.length - 1)}
           >

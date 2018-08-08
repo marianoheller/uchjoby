@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Parallax, ParallaxLayer } from 'react-spring'
+import { Parallax, ParallaxLayer, config } from 'react-spring'
 
 import Flashcard from '../../components/Flashcard';
 import * as wordsActions from '../../actions/words';
@@ -27,7 +27,7 @@ const ParallaxContainer = styled.div`
   & > div {
     position: relative !important;
   }
-  & > div > div {
+  & > div > div > div{
     display: flex;
     justify-content: center;
     text-align: center;
@@ -57,17 +57,18 @@ const Buttonera = styled.div`
   overflow: hidden;
 
   position: absolute;
-  top: 50%;
+  bottom: 50%;
   left: 0;
   right: 0;
-  transform: translate(0, -50%);
+  transform: translate(0, 50%);
 
   @media only screen and (max-width: 768px) {
-    position: inherit;
-    bottom: unset;
-    left: unset;
-    right: unset;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     transform: translate(0, 0);
+    margin-bottom: 1rem;
   }
 `;
 
@@ -87,6 +88,7 @@ const Button = styled.div`
   margin: 0 0.75rem;
   background-color: ${({ theme }) => theme.palette.button.normal};
   color: white;
+  z-index: ${({ theme }) => theme.zIndex.flashcard + 1};
 
   opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
   filter: ${({ disabled }) => (disabled ? 'brightness(90%)' : 'brightness(100%)')};
@@ -153,6 +155,10 @@ class Practice extends React.Component {
              pages={data.length}
              horizontal
              scrolling={false}
+             config={{
+              tension: 100,
+              friction: 26
+            }}
           >
             {data.map((wordData, i) => {
               if ( i === currentIndex - 1 ||
@@ -162,7 +168,7 @@ class Practice extends React.Component {
                 return (
                   <ParallaxLayer
                     offset={i}
-                    speed={0.1}
+                    speed={0}
                     key={`${i}`}
                   >
                     <FlashcardContainer>

@@ -77,10 +77,18 @@ export const ButtonLink = styled(__ButtonLink)`
   justify-content: center;
   align-items: center;
   margin: 0 1rem;
+
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  opacity: ${({ disabled }) => (disabled ? '0.6' : '1')};
+
   &:hover {
     filter: brightness(90%);
   }
   & > a {
+    pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
+    cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+
     text-decoration: none;
     font-weight: bold;
     padding: 0.75rem 1rem;

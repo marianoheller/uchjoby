@@ -20,17 +20,7 @@ const AppContainer = styled.div`
 class App extends Component {
   componentDidMount() {
     const { getWord } = this.props;
-    document.addEventListener("keydown", this._handleKeyDown.bind(this));
     getWord();
-  }
-
-  _handleKeyDown(e) {
-    if (e.keyCode === 39 ) { // Arrow right
-      this.props.nextCard();
-    }
-    if (e.keyCode === 37 ) { // Arrow left
-      this.props.previousCard();
-    }
   }
 
   render() {

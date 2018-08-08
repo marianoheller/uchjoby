@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
-import { Parallax, ParallaxLayer, config } from 'react-spring'
+import { Parallax, ParallaxLayer } from 'react-spring'
 
 import Flashcard from '../../components/Flashcard';
 import * as wordsActions from '../../actions/words';
@@ -103,11 +103,12 @@ const Button = styled.div`
 class Practice extends React.Component {
   constructor(props) {
     super();
-    this.state = {
-      prevIndex: props.currentIndex,
-    }
     this.handleNextCard = this.handleNextCard.bind(this);
     this.handlePreviousCard = this.handlePreviousCard.bind(this);
+  }
+
+  componentDidMount() {
+    document.addEventListener("keydown", this._handleKeyDown.bind(this));
   }
 
   componentDidUpdate(prevProps) {
@@ -115,6 +116,15 @@ class Practice extends React.Component {
       this.setState({
         prevIndex: prevProps.currentIndex,
       })
+    }
+  }
+
+  _handleKeyDown(e) {
+    if (e.keyCode === 39 ) { // Arrow right
+      this.handleNextCard(this.props.currentIndex);
+    }
+    if (e.keyCode === 37 ) { // Arrow left
+      this.handlePreviousCard(this.props.currentIndex);
     }
   }
 
@@ -142,11 +152,6 @@ class Practice extends React.Component {
       translationsStatus,
       infosStatus,
     } = this.props;
-    const { prevIndex } = this.state;
-    const rangeWords = data.slice(
-      currentIndex > 0 ? currentIndex - 1 : 0,
-      currentIndex + 2
-    );
     return (
       <PracticeContainer>
         <ParallaxContainer>

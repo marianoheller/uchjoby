@@ -2,8 +2,6 @@ import * as wordsActions from '../actions/words';
 import * as infosActions from '../actions/infos';
 import * as translationsActions from '../actions/translations';
 
-import { MAX_WORDS_BUFF } from '../config';
-
 const initState = {
   /**
    * [ { word, translation, info } ]

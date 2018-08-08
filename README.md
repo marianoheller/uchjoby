@@ -1,11 +1,8 @@
 # Uchjoby
+------------------------------------------------------------
+
+![uchjoby gif](https://media.giphy.com/media/5nmlD6XIEi62KplcXh/giphy.gif)
 
 Learn Russian using flashcards
-
-
-### TODO
-* opacity on enter (with flip no pip)
-* animation on next card
-
-
+Live demo: [HERE!](https://boiling-mountain-89754.herokuapp.com/)
 

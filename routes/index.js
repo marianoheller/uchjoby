@@ -3,7 +3,7 @@ const router = express.Router();
 const config = require('../package.json');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/version', function(req, res, next) {
   res.json({
     version: config.version,
   });
